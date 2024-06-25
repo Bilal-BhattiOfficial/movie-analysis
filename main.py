@@ -2,6 +2,10 @@ from src.config.config import *
 from src.db.db import *
 from src.analysis.duplicated_list_movies.main import *
 from src.analysis.dig_deeper.longest_shortest_runtime_movies.main import *
+from src.analysis.dig_deeper.titles.main import *
+from src.analysis.dig_deeper.movies_per_genre.main import *
+from src.analysis.dig_deeper.average_run_times.main import *
+from src.analysis.dig_deeper.average_imdb_score.main import *
 
 
 def db_setup():
@@ -32,7 +36,19 @@ def analysis():
     collect_table_data(conn)
 
     # Longest and Shortest Runtime for MOVIE
-    data = collect_data(conn)
+    collect_data(conn)
+
+    #Longest and Shortest titles
+    collect_titles(conn)
+
+    #Movies Count per Genre
+    #count_movies(conn)
+
+    #Average Runtimes Per Release Year
+    #average_runtimes(conn)
+
+    #Average IMDB Scores
+    average_imdbscore(conn)
     # print(data)
     conn.close()
 

@@ -9,30 +9,27 @@ def read_sql_query(file_path):
     except Exception as e:
         print("SQL file reading error : {e}")
 
-def execute_sql_query(conn,file_path):
+def execute_sql_query(conn,sql_script):
      try:
          with conn:
-            # sql_script = read_sql_query(file_path)
-            # cursor = conn.executescript(sql_script)
-            # return cursor.fetchall()
-
-            query = '''SELECT MAX(runtime) AS Longest_runtime
-                    FROM deduplicated_list
-                    Where "type" = 'MOVIE';'''
-            df = pd.read_sql_query(query, conn)
-            return df
-            # return cursor.fetchone()[0]
+            conn.executescript(sql_script)
+            print("SQL script executed successfully.")
      except Exception as e:
          print(f"An error occurred: {e}")
 
 
 def collect_data(conn):
-    file_path = "./src/analysis/dig_deeper/longest_shortest_runtime_movies/longest_query.sql"
-    longest = execute_sql_query(conn,file_path)
-    print(longest)
-    # file_path2 = "./src/analysis/dig_deeper/longest_shortest_runtime_movies/shortest_query.sql"
-    # sql_script2 = read_sql_query(file_path2)
-    #shortest = pd.read_sql_query(conn,sql_script2)
-    # return longest
+
+    sql_query = read_sql_query("./src/analysis/dig_deeper/longest_shortest_runtime_movies/longest_query.sql")
+    execute_sql_query(conn,sql_query)
+    df = pd.read_sql_query(sql_query,conn)
+    longest_runtime = df.iloc[0, 0]
+    print(f"The longest runtime among movies is: {longest_runtime}")
+
+    sql_query2 = read_sql_query("./src/analysis/dig_deeper/longest_shortest_runtime_movies/shortest_query.sql")
+    execute_sql_query(conn,sql_query2)
+    df = pd.read_sql_query(sql_query2,conn)
+    shortest_runtime = df.iloc[0, 0]
+    print(f"The shortes runtime among movies is: {shortest_runtime}")
 
    
