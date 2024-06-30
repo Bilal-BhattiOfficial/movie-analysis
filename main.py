@@ -6,6 +6,8 @@ from src.analysis.dig_deeper.titles.main import *
 from src.analysis.dig_deeper.movies_per_genre.main import *
 from src.analysis.dig_deeper.average_run_times.main import *
 from src.analysis.dig_deeper.average_imdb_score.main import *
+from src.analysis.credits_analysis.most_starred_actor_in_most_movies.main import *
+from src.analysis.self_insights.movies_per_each_year.main import *
 
 
 def db_setup():
@@ -39,7 +41,7 @@ def analysis():
     collect_data(conn)
 
     #Longest and Shortest titles
-    collect_titles(conn)
+    #collect_titles(conn)
 
     #Movies Count per Genre
     #count_movies(conn)
@@ -48,7 +50,13 @@ def analysis():
     #average_runtimes(conn)
 
     #Average IMDB Scores
-    average_imdbscore(conn)
+    #average_imdbscore(conn)
+
+    #Movies Movies of an Actor by Release Year
+    #actor_most_movies_by_releaseyear(conn)
+
+    #Number of movies per year
+    movies_peryear(conn)
     # print(data)
     conn.close()
 
