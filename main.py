@@ -41,19 +41,19 @@ def analysis():
     collect_data(conn)
 
     #Longest and Shortest titles
-    #collect_titles(conn)
+    collect_titles(conn)
 
     #Movies Count per Genre
-    #count_movies(conn)
+    count_movies(conn)
 
     #Average Runtimes Per Release Year
-    #average_runtimes(conn)
+    average_runtimes(conn)
 
     #Average IMDB Scores
-    #average_imdbscore(conn)
+    average_imdbscore(conn)
 
     #Movies Movies of an Actor by Release Year
-    #actor_most_movies_by_releaseyear(conn)
+    actor_most_movies_by_releaseyear(conn)
 
     #Number of movies per year
     movies_peryear(conn)
