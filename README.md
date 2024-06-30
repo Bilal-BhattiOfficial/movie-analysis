@@ -197,6 +197,6 @@ By following this process, the database is set up and populated with the necessa
 
 This project effectively demonstrated the process of establishing a database connection, importing and modifying data using SQL, and creating informative visuals. Various analytical tasks revealed important patterns and insights within a vast movie dataset. The SQL queries and visualizations showcased proficiency in database management and data analysis techniques, providing a clear and efficient approach to exploring the data. This report exemplifies the valuable insights that can be derived from well-organized datasets, emphasizing the importance of data-driven decision-making in product analysis.
 
-For more detailed information, please refer to the [Project Report](.\src\report\Metycle_Project___Movie_Data_Analysis_Report.pdf).
+For more detailed information, please refer to the [Project Report](./src/report/Metycle_Project___Movie_Data_Analysis_Report.pdf).
 
 
