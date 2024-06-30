@@ -33,12 +33,123 @@ The dataset is divided into three main tables:
 - **Ratings**: Includes IMDb ratings and votes, linked to the titles table via the ID.
 - **Credits**: Lists actors and directors associated with the movies and TV shows, linking to the titles and ratings tables.
 
+
 ### Data Import and Setup
 
-The process of setting up the database and importing data involves several key steps:
-1. **Configuration**: Settings are stored in the `config.py` file, defining the database name and the path to the SQL initialization script.
-2. **Database Setup**: The database is configured and initialized using the settings from the `config.py` file.
-3. **Database Functions**: Scripts are used to manage database operations, including data loading and processing.
+The process of setting up the database and importing data involves several key steps. This section describes the configuration, database setup, database loading, and the scripts used to manage these operations.
+
+### Configuration
+
+The configuration settings are stored in the `config.py` file, which defines the database name and the path to the SQL initialization script. The contents of the `config.py` file are as follows:
+```python
+db_name = './database/movie-analysis.db'
+sql_file_path = './src/db/init.sql'
+```
+
+```cmd
+python ./main.py
+```
+
+### Database Setup
+
+The main database setup and data import operations are handled in the `main.py` file. The `db_setup` function orchestrates the entire process:
+
+```python
+def db_setup():
+    # Connecting database
+    conn = create_and_connect_database(db_name)
+    # Emptying the database
+    drop_all_tables(conn)
+    # Inserting tables in db
+    sql_script = read_sql_file(sql_file_path)
+    execute_sql_script(conn, sql_script)
+    # Loading data into the tables
+    load_csv_data(conn, "./movies/credits.csv", "credits")
+    load_csv_data(conn, "./movies/titles.csv", "titles")
+    load_csv_data(conn, "./movies/ratings.csv", "ratings")
+    # DB connection closed
+    conn.close()
+    print("Database connection closed.")
+
+```
+
+### Database Functions
+
+The `db.py` file contains all the functions required for creating the database, reading SQL scripts, executing SQL commands, loading CSV data into the database, and dropping existing tables. These functions are as follows:
+
+```python
+import sqlite3
+import csv
+
+def create_and_connect_database(db_name):
+    try:
+        conn = sqlite3.connect(db_name)
+        print(f"Database '{db_name}' created successfully.")
+        return conn
+    except Exception as e:
+        print(f"DB creation error: {e}")
+
+def read_sql_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            sql_script = file.read()
+            print(f"SQL file '{file_path}' read successfully.")
+            return sql_script
+    except Exception as e:
+        print(f"SQL file reading error: {e}")
+
+def execute_sql_script(conn, sql_script):
+    try:
+        with conn:
+            conn.executescript(sql_script)
+            print("SQL script executed successfully.")
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+
+def load_csv_data(conn, csv_file, table_name):
+    try:
+        cursor = conn.cursor()
+        with open(csv_file, 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            columns = ', '.join(reader.fieldnames)
+            placeholders = ', '.join('?' * len(reader.fieldnames))
+            sql = f'INSERT INTO {table_name} ({columns}) VALUES ({placeholders})'
+            for row in reader:
+                cursor.execute(sql, list(row.values()))
+            conn.commit()
+    except Exception as e:
+        print(f"CSV loading error: {e}")
+
+def drop_all_tables(conn):
+    try:
+        cursor = conn.cursor()
+        # Get list of tables in the database
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        # Drop each table
+        for table in tables:
+            table_name = table[0]
+            cursor.execute(f"DROP TABLE IF EXISTS {table_name};")
+            print(f"Table '{table_name}' dropped successfully.")
+        conn.commit()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+```
+
+## Process Overview
+
+1. **Connecting to the Database**: The create and connect database function establishes a connection to the SQLite database specified in the configuration file. If the database does not exist, it is created.
+
+2. **Emptying the Database**: The drop all tables function removes all existing tables from the database to ensure a clean slate for data import.
+
+3. **Executing SQL Script**: The read sql file function reads the SQL initialization script from the specified file path. The execute sql script function then executes this script to create the necessary tables in the database.
+
+4. **Loading CSV Data**: The load csv data function imports data from CSV files into the corresponding tables in the database. This function reads the CSV files for the credits, titles, and ratings tables and inserts the data into the database.
+
+5. **Closing the Connection**: Finally, the database connection is closed, ensuring all operations are properly completed and resources are released.
+
+By following this process, the database is set up and populated with the necessary data, ready for further analysis and querying.
+
 
 ## Tasks and Analysis
 
